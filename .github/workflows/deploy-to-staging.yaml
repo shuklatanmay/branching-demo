@@ -81,7 +81,12 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-        
+      - name: Create Release Tag
+        id: create-release-tag
+        run: |
+          TAG_NAME=$(git describe --tags --abbrev=0)
+          echo "tag_name=$TAG_NAME" >> $GITHUB_ENV
+          
       # - name: Create Release Tag
       #   id: create-release-tag
       #   run: |
@@ -94,10 +99,10 @@ jobs:
       #       echo "Not a tag push"
       #     fi
 
-      - name: Create Release Tag
-        id: create-release-tag
-        run: |
-          echo "tag_name=r-$(printf %04d $GITHUB_RUN_NUMBER)" >> $GITHUB_OUTPUT
+      # - name: Create Release Tag
+      #   id: create-release-tag
+      #   run: |
+      #     echo "tag_name=r-$(printf %04d $GITHUB_RUN_NUMBER)" >> $GITHUB_OUTPUT
 
       - name: Create Draft Release
         uses: softprops/action-gh-release@v1
