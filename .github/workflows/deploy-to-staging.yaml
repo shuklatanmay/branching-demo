@@ -81,35 +81,16 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-
-      # - name: Create Release Tag
-      #   id: create-release-tag
-      #   run: |
-      #     echo "tag_name=r-$(printf %04d $GITHUB_RUN_NUMBER)" >> $GITHUB_OUTPUT
-
-      
-      - name: Get Latest Tag
-        id: get-latest-tag
+      - name: Create Release Tag
+        id: create-release-tag
         run: |
-          latest_tag=$(git describe --tags `git rev-list --tags --max-count=1`)
-          echo "::set-output name=tag_name::$latest_tag"
-
+          echo "tag_name=r-$(printf %04d $GITHUB_RUN_NUMBER)" >> $GITHUB_OUTPUT
+      
       - name: Create Draft Release
-        id: create-release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: ${{ needs.get-latest-tag.outputs.tag_name }}
-          name: Release ${{ needs.get-latest-tag.outputs.tag_name }}
-      
-      
-      
-      
-      
-      # - name: Create Draft Release
-      #   uses: softprops/action-gh-release@v1
-      #   with:
-      #     tag_name: ${{ steps.create-release-tag.outputs.tag_name }}
-      #     name: Release ${{ steps.create-release-tag.outputs.tag_name }}
+          tag_name: ${{ steps.create-release-tag.outputs.tag_name }}
+          name: Release ${{ steps.create-release-tag.outputs.tag_name }}
           body: |
             ## Info
             Docker image for commit ${{ github.sha }} was deployed to `staging`.
