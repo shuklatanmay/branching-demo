@@ -1,22 +1,22 @@
 name: Deploy to Staging
 
-# on:
-#   push:
-#     branches:
-#       - main
-#     tags:
-#       - 'v*' # Replace 'v*' with the specific tag pattern you want to trigger the workflow on
-#   pull_request:
-#     branches:
-#       - main
-#     types: [closed]
-#     tags:
-#       - 'v*' # Same specific tag pattern as in the push event
-
 on:
   push:
     branches:
-      - main  # Replace with your main branch name
+      - main
+    tags:
+      - 'v*' # Replace 'v*' with the specific tag pattern you want to trigger the workflow on
+  pull_request:
+    branches:
+      - main
+    types: [closed]
+    tags:
+      - 'v*' # Same specific tag pattern as in the push event
+
+# on:
+#   push:
+#     branches:
+#       - main  # Replace with your main branch name
   workflow_dispatch:
     inputs:
       environment:
@@ -97,8 +97,8 @@ jobs:
         id: create-release-tag
         run: |
           # Check if this is a tag push
-          if [ -n "${GITHUB_REF##refs/tags/}" ]; then
-            TAG=$(echo "${GITHUB_REF##refs/tags/}")
+          if [[ $GITHUB_REF == refs/tags/* ]]; then
+            TAG="${GITHUB_REF##*/}"
             echo "Tag push detected: $TAG"
             echo "tag_name=$TAG" >> $GITHUB_OUTPUT
           else
