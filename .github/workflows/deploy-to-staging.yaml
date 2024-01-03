@@ -9,12 +9,12 @@ on:
 #   push:
 #     branches:
 #       - main  # Replace with your main branch name
-  workflow_dispatch:
-    inputs:
-      environment:
-        description: 'Environment name'
-        required: true
-        default: 'staging'
+  # workflow_dispatch:
+  #   inputs:
+  #     environment:
+  #       description: 'Environment name'
+  #       required: true
+  #       default: 'staging'
 
 jobs:
   deploy-to-dev:
