@@ -2,27 +2,19 @@ name: Deploy to Staging
 
 on:
   push:
-    branches:
-      - main
     tags:
-      - 'v*' # Replace 'v*' with the specific tag pattern you want to trigger the workflow on
-  pull_request:
-    branches:
-      - main
-    types: [closed]
-    tags:
-      - 'v*' # Same specific tag pattern as in the push event
+      - 'v[0-9]+.[0-9]+.[0-9]+'
 
 # on:
 #   push:
 #     branches:
 #       - main  # Replace with your main branch name
-#   workflow_dispatch:
-#     inputs:
-#       environment:
-#         description: 'Environment name'
-#         required: true
-#         default: 'staging'
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment name'
+        required: true
+        default: 'staging'
 
 jobs:
   deploy-to-dev:
