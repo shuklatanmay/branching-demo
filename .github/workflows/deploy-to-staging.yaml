@@ -99,8 +99,8 @@ jobs:
         id: create-release-tag
         run: |
           # Check if this is a tag push
-          if [ -n "$GITHUB_REF" ] && [ -z "$GITHUB_HEAD_REF" ]; then
-            TAG=$(echo "${GITHUB_REF#refs/tags/}")
+          if [ -n "${GITHUB_REF##refs/tags/}" ]; then
+            TAG=$(echo "${GITHUB_REF##refs/tags/}")
             echo "Tag push detected: $TAG"
             echo "tag_name=$TAG" >> $GITHUB_OUTPUT
           else
