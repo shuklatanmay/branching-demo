@@ -1,4 +1,4 @@
-#  RELEASE -  v4.0
+#  RELEASE -  v0.0
 
 ## Branching Demo for "Trunk based development Strategy"
 
