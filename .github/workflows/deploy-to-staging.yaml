@@ -1,15 +1,23 @@
 name: Deploy to Staging
 
 on:
-  push:
+  pull_request:
+    types: [closed]
     branches:
-      - main  # Replace with your main branch name
-  workflow_dispatch:
-    inputs:
-      environment:
-        description: 'Environment name'
-        required: true
-        default: 'staging'
+      - main
+
+
+
+# on:
+#   push:
+#     branches:
+#       - main  # Replace with your main branch name
+#   workflow_dispatch:
+#     inputs:
+#       environment:
+#         description: 'Environment name'
+#         required: true
+#         default: 'staging'
 
 jobs:
   deploy-to-dev:
