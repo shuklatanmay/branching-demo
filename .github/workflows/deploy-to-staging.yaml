@@ -2,19 +2,14 @@ name: Deploy to Staging
 
 on:
   push:
-    tags:
-      - 'v[0-9]+.[0-9]+.[0-9]+'
-
-# on:
-#   push:
-#     branches:
-#       - main  # Replace with your main branch name
-  # workflow_dispatch:
-  #   inputs:
-  #     environment:
-  #       description: 'Environment name'
-  #       required: true
-  #       default: 'staging'
+    branches:
+      - main  # Replace with your main branch name
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment name'
+        required: true
+        default: 'staging'
 
 jobs:
   deploy-to-dev:
@@ -85,22 +80,24 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-      - name: Create Release Tag
-        id: create-release-tag
-        run: |
-          # Check if this is a tag push
-          if [[ $GITHUB_REF == refs/tags/* ]]; then
-            TAG="${GITHUB_REF##*/}"
-            echo "Tag push detected: $TAG"
-            echo "tag_name=$TAG" >> $GITHUB_OUTPUT
-          else
-            echo "Not a tag push"
-          fi
 
+        
       # - name: Create Release Tag
       #   id: create-release-tag
       #   run: |
-      #     echo "tag_name=r-$(printf %04d $GITHUB_RUN_NUMBER)" >> $GITHUB_OUTPUT
+      #     # Check if this is a tag push
+      #     if [[ $GITHUB_REF == refs/tags/* ]]; then
+      #       TAG="${GITHUB_REF##*/}"
+      #       echo "Tag push detected: $TAG"
+      #       echo "tag_name=$TAG" >> $GITHUB_OUTPUT
+      #     else
+      #       echo "Not a tag push"
+      #     fi
+
+      - name: Create Release Tag
+        id: create-release-tag
+        run: |
+          echo "tag_name=r-$(printf %04d $GITHUB_RUN_NUMBER)" >> $GITHUB_OUTPUT
 
       - name: Create Draft Release
         uses: softprops/action-gh-release@v1
