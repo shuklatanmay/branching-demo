@@ -22,7 +22,6 @@ jobs:
   
   deploy-to-dev:
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && !contains(github.event.head_commit.message, 'refs/tags')
     environment:
       name: development
     
