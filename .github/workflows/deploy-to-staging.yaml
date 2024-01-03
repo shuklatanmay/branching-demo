@@ -1,0 +1,74 @@
+name: Deploy to Staging
+
+on:
+  push:
+    branches:
+      - main  # Replace with your main branch name
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment name'
+        required: true
+        default: 'staging'
+
+jobs:
+  deploy-to-dev:
+    runs-on: ubuntu-latest
+    environment:
+      name: dev
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Login to AWS ECR
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Build and Push Docker image - Dev
+        run: |
+          docker build -t your-ecr-url/dev:latest .
+          docker push your-ecr-url/dev:latest
+
+  deploy-to-staging:
+    runs-on: ubuntu-latest
+    environment:
+      name: ${{ github.event.inputs.environment }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Login to AWS ECR
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Build and Push Docker image - Staging
+        run: |
+          docker build -t your-ecr-url/staging:latest .
+          docker push your-ecr-url/staging:latest
+
+  create-release:
+    runs-on: ubuntu-latest
+    needs: deploy-to-staging
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Create Release Tag
+        id: create-release-tag
+        run: |
+          echo "tag_name=r-$(printf %04d $GITHUB_RUN_NUMBER)" >> $GITHUB_OUTPUT
+
+      - name: Create Draft Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ steps.create-release-tag.outputs.tag_name }}
+          name: Release ${{ steps.create-release-tag.outputs.tag_name }}
+          body: |
+            ## Info
+            Docker image for commit ${{ github.sha }} was deployed to `staging`.
+            
+            It was initialized by [${{ github.event.sender.login }}](${{ github.event.sender.html_url }}).
+            
+            ## How to Promote?
+            In order to promote this to `production`, edit the draft and press **"Publish release"**.
+          draft: true
