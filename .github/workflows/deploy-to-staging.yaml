@@ -9,7 +9,7 @@ on:
       environment:
         description: 'Environment name'
         required: true
-        default: 'development'
+        default: 'staging'
 
 jobs:
   deploy-to-dev:
@@ -98,3 +98,4 @@ jobs:
             ## How to Promote?
             In order to promote this to `production`, edit the draft and press **"Publish release"**.
           draft: true
+          token: ${{ secrets.YOUR_GITHUB_TOKEN }}
