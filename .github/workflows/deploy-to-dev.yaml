@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - main  # Replace with your main branch name
+    tags-ignore:
+      -  "*"
 
 jobs:
   deploy-to-dev:
